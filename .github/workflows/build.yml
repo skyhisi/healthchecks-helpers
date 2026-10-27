@@ -8,19 +8,17 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - name: Install dependencies
-        run: >-
-          sudo apt-get install -yqqU
-          build-essential
-          cmake
-          debhelper
-          groff-base
-          just
-          libcurl4-openssl-dev
-          libsystemd-dev
-          pkg-config
-      - name: Build
-        run: just build-deb
+        run: sudo apt-get install -yqqU just
+      - name: Build Debian
+        run: just docker-build-deb
+      - name: Build Fedora
+        run: just docker-build-rpm
+      - uses: actions/upload-artifact@v7
+        with:
+          path: |
+            dist/*.deb
+            dist/*.rpm
