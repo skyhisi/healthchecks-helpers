@@ -37,10 +37,14 @@ version-check:
     grep -qF 'Version:        {{ version }}' healthchecks-helpers.spec
     grep -qF 'healthchecks-helpers ({{ version }})' debian/changelog
 
+tag-check tag:
+    test '{{ tag }}' == 'v{{ version }}'
+
 lint:
     ! groff -man -ww -Tutf8 docs/healthchecks-systemd-oneshot.1 2>&1 >/dev/null | grep -q .
 
 build-rpm: version-check lint
+    rm -rf '{{ rpmbuild_dir }}'
     mkdir -p '{{ rpmbuild_src_dir }}'
     tar --exclude=build --exclude=dist \
         --transform 's,^\.,healthchecks-helpers-{{ version }},' \
@@ -49,6 +53,7 @@ build-rpm: version-check lint
     find '{{ rpmbuild_dir / "RPMS" }}' -name 'healthchecks-helpers-{{ version }}*.rpm' -execdir cp -v '{}' '{{ dist_dir }}' \;
 
 build-deb: version-check lint
+    rm -rf '{{ debbuild_dir }}'
     mkdir -p '{{ debbuild_src_dir }}'
     cp -av debian CMakeLists.txt LICENSE docs *.c '{{ debbuild_src_dir }}/'
     cd '{{ debbuild_src_dir }}' && dpkg-buildpackage -us -uc -b

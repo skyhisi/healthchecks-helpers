@@ -1,0 +1,30 @@
+name: Release
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write # to create the release and upload assets
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install dependencies
+        run: sudo apt-get install -yqqU just
+      - name: Check tag matches version
+        env:
+          TAG: ${{ github.ref_name }}
+        run: just tag-check "$TAG"
+      - name: Build Debian
+        run: just docker-build-deb
+      - name: Build Fedora
+        run: just docker-build-rpm
+      - name: Publish release
+        if: ${{ !env.ACT }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: gh release create "$TAG" --generate-notes dist/*.deb dist/*.rpm
