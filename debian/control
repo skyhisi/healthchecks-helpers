@@ -2,6 +2,7 @@ Source: healthchecks-helpers
 Section: utils
 Priority: optional
 Maintainer: Silas Parker <silas@srp.me.uk>
+Homepage: https://github.com/skyhisi/healthchecks-helpers
 Build-Depends:
  debhelper-compat (= 13),
  cmake,

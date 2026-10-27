@@ -4,7 +4,7 @@ Release:        1%{?dist}
 Summary:        Helper for systemd oneshot services to ping Healthchecks.io
 
 License:        MIT
-# URL:           fill in upstream homepage if any
+URL:            https://github.com/skyhisi/healthchecks-helpers
 Source0:        %{name}-%{version}.tar.gz
 
 BuildRequires:  gcc
