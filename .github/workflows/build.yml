@@ -1,0 +1,17 @@
+name: Build
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: apt-get install -yqqU cmake debhelper groff-base just libcurl4-openssl-dev libsystemd-dev pkg-config
+      - name: Build
+        run: just build
