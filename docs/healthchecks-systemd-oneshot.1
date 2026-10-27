@@ -1,0 +1,80 @@
+.\" Manual page for healthchecks-systemd-oneshot.
+.TH HEALTHCHECKS\-SYSTEMD\-ONESHOT 1 2026-10-27 healthchecks-helpers 1.0
+.SH NAME
+healthchecks\-systemd\-oneshot \- ping Healthchecks.io from a systemd oneshot service
+.SH SYNOPSIS
+.B healthchecks\-systemd\-oneshot
+.RB [ \-jvh ]
+.I URL
+.SH DESCRIPTION
+.B healthchecks\-systemd\-oneshot
+reports the outcome of a systemd oneshot service to
+.UR https://healthchecks.io
+Healthchecks.io
+.UE .
+.PP
+It is intended to be invoked from
+.B ExecStartPost=
+(to signal the start of the run) and
+.B ExecStopPost=
+(to signal success or failure).
+.SH OPTIONS
+.TP
+.B \-j
+For
+.B ExecStopPost=
+attach the service's journal entries.
+.TP
+.B \-v
+Verbose logging.
+.TP
+.B \-h
+Print usage.
+.SH ENVIRONMENT
+.TP
+.B SERVICE_RESULT
+Set by systemd for
+.BR ExecStopPost= ;
+its presence distinguishes the final ping from the start ping.
+.TP
+.B EXIT_CODE
+When
+.BR exited ,
+the run is reported with
+.BR EXIT_STATUS .
+.TP
+.B EXIT_STATUS
+Process exit status; must parse as a number in 0\(en255.
+.TP
+.B INVOCATION_ID
+Used to build the
+.B rid=
+parameter and to match journal entries for
+.BR \-j .
+.SH EXIT STATUS
+The exit status is the libcurl result code:
+.B 0
+on success, non-zero otherwise (e.g.\&
+.B 7
+couldn't connect,
+.B 22
+HTTP response >= 400 because
+.B CURLOPT_FAILONERROR
+is set).
+.SH EXAMPLES
+.PP
+Start and result pings for a oneshot service:
+.PP
+.nf
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/myjob
+ExecStartPost=healthchecks-systemd-oneshot https://hc-ping.com/<uuid>
+ExecStopPost=healthchecks-systemd-oneshot -j https://hc-ping.com/<uuid>
+.fi
+.SH SEE ALSO
+.UR https://healthchecks.io/docs/http_api/
+Healthchecks.io HTTP API
+.UE ,
+.BR systemd.service (5),
+.BR systemd.exec (5)

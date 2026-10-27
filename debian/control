@@ -1,0 +1,18 @@
+Source: healthchecks-helpers
+Section: utils
+Priority: optional
+Maintainer: Silas Parker <silas@srp.me.uk>
+Build-Depends:
+ debhelper-compat (= 13),
+ cmake,
+ libcurl4-openssl-dev,
+ libsystemd-dev,
+ pkg-config
+Rules-Requires-Root: no
+
+Package: healthchecks-helpers
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: helper for systemd oneshot services to ping Healthchecks.io
+ healthchecks-systemd-oneshot pings Healthchecks.io from systemd oneshot
+ services, optionally attaching recent journal entries of the unit.
