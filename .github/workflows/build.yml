@@ -12,6 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install dependencies
-        run: apt-get install -yqqU cmake debhelper groff-base just libcurl4-openssl-dev libsystemd-dev pkg-config
+        run: sudo apt-get install -yqqU cmake debhelper groff-base just libcurl4-openssl-dev libsystemd-dev pkg-config
       - name: Build
-        run: just build
+        run: just build-deb
