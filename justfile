@@ -38,7 +38,7 @@ version-check:
     grep -qF 'healthchecks-helpers ({{ version }})' debian/changelog
 
 tag-check tag:
-    test '{{ tag }}' == 'v{{ version }}'
+    test '{{ tag }}' = 'v{{ version }}'
 
 lint:
     ! groff -man -ww -Tutf8 docs/healthchecks-systemd-oneshot.1 2>&1 >/dev/null | grep -q .
